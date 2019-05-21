@@ -11,6 +11,8 @@ Host name: <http://104.197.242.30.xip.io/>
 
 Public IP: 104.197.242.30
 
+SSH port: 22000
+
 ## Google Cloud Server Setup
 
 1. Go to [cloud console](https://console.cloud.google.com/)
