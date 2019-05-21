@@ -44,4 +44,28 @@ sudo ufw deny 22                 # Deny tcp and udp packets on port 22.
 
 1. Enable UFW with `sudo ufw enable`
 2. Check the status and all current rules with `sudo ufw status`
-3. 
+3. Install [Fail2ban](http://www.fail2ban.org/wiki/index.php/Main_Page) `sudo apt-get install fail2ban`
+4. To send email `sudo apt-get install sendmail iptables-persistent`
+5. Copy jail.conf to local copy `sudo cp/etc/fail2ban/jail.conf /etc/fail2ban/jail.local`
+6. Edit jail.local to change ssh to port 2200 and configure action send email and recipient. Restart the service `sudo service fail2ban restart`
+
+```
+destemail = user@domain
+action = %(action_mwl)s
+port = 2200 
+```
+
+## Create User Grader
+
+1. To create the grader user: `sudo adduser grader`
+2. To give permissions: `sudo visudo`
+3. Add below root ALL=... `grader ALL=(ALL:ALL)`
+4. To verify run: `su - grader` and enter password then run: `sudo - grader`. Make sure the last line includes your ALL statement from above.  
+5. On your local machine, create an SSH key pair for user grader. This can be done using `ssh-keygen` or [Putty Gen](https://www.ssh.com/ssh/putty/windows/puttygen) for Windows.
+6. On the virtual machine create an ssh directory: `mkdir .ssh`
+7. Create an authorized keys file: `sudo vim ~/.ssh/authorized_keys`
+8. In this file copy the public key you generated on your local machine into this file and save.
+9. Give permissions: `chmod 700 .ssh` and `chmod 644 .ssh/authorized_keys`
+10. Change to deny password auth: `vim /etc/ssh/sshd_config` set `PasswordAuthetication no`
+11. Restart service: `sudo service ssh restart`
+12. On your local machine test by connecting with Putty on Windows or `ssh -i <path to private key> -p 2200 grader@<public ip>`
